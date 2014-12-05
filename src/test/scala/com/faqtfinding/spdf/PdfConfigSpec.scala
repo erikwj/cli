@@ -1,4 +1,4 @@
-package com.faqtfinding.spdf
+package com.faqtfinding.tools
 
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.WordSpec

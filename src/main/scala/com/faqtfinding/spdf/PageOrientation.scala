@@ -1,4 +1,4 @@
-package com.faqtfinding.spdf
+package com.faqtfinding.tools
 
 import com.faqtfinding.cli._
 import ParamShow._

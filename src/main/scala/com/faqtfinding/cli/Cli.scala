@@ -15,13 +15,7 @@ object Executable {
     val executableFile = new File(path)
     if(executableFile.canExecute) Some(path) else None 
   }
-
-  def validate(name: String): Option[Executable] = 
-    for {
-      path <- findExecutable(name)
-      executablepath <- checkExecutability(path)
-    } yield new Executable(name, executablepath) 
-
+  
   /**
    * Attempts to find the executable in the system path.
    * @return
@@ -32,9 +26,13 @@ object Executable {
     case _: RuntimeException => None
   }
 
+  def validate(name: String): Option[Executable] = 
+    for {
+      path <- findExecutable(name)
+      executablepath <- checkExecutability(path)
+    } yield Executable(name, executablepath) 
+
 }
-
-
 
 
 abstract class CLI(executable: Executable, config: CliConfig) {
@@ -42,11 +40,11 @@ abstract class CLI(executable: Executable, config: CliConfig) {
   /**
    * Runs the commandline tool 
    */
-  def run[A, B](sourceDocument: A, destinationDocument: B)(implicit sourceDocumentLike: InputSourceFormat[A], destinationDocumentLike: OutputSourceFormat[B]): Int = {
-    val commandLine = toCommandLine(sourceDocument, destinationDocument)
+  def run[A, B](input: A, output: B)(implicit inputSource: InputSourceFormat[A], outputSource: OutputSourceFormat[B]): Int = {
+    val commandLine = toCommandLine(input, output)
     val process = Process(commandLine)
-    def source = sourceDocumentLike.sourceFrom(sourceDocument) _
-    def sink = destinationDocumentLike.sinkTo(destinationDocument) _
+    def source = inputSource.sourceFrom(input) _
+    def sink = outputSource.sinkTo(output) _
 
     (sink compose source)(process).!
   }
@@ -54,13 +52,13 @@ abstract class CLI(executable: Executable, config: CliConfig) {
   /**
    * Generates the command line needed to execute the Executable
    */
-  def toCommandLine[A: InputSourceFormat, B: OutputSourceFormat](source: A, destination: B): Seq[String] =
+  def toCommandLine[A: InputSourceFormat, B: OutputSourceFormat](input: A, output: B): Seq[String] =
     Seq(executable.path) ++
       CliConfig.toParameters(config) ++
       Seq(
         "--quiet",
-        implicitly[InputSourceFormat[A]].commandParameter(source),
-        implicitly[OutputSourceFormat[B]].commandParameter(destination)
+        implicitly[InputSourceFormat[A]].commandParameter(input),
+        implicitly[OutputSourceFormat[B]].commandParameter(output)
       )
 
 }

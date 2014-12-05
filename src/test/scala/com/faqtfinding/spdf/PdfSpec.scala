@@ -1,4 +1,4 @@
-package com.faqtfinding.spdf
+package com.faqtfinding.tools
 
 import java.io.File
 import scala.sys.process._

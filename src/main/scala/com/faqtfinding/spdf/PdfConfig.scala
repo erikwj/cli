@@ -5,6 +5,16 @@ import scala.sys.process._
 import com.faqtfinding.cli.ParamShow._
 import ParamShowPdf._
 
+
+object ParamShowPdf {
+  
+  implicit object PageOrientationParamShow extends ParamShow[PageOrientation] {
+    override def show(name: String, value: PageOrientation): Iterable[String] =
+      formatParam(name, Some(value.value))
+  }
+
+}
+
 /**
  * Holds the configuration parameters of Pdf Kit
  */

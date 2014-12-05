@@ -10,22 +10,23 @@ class PdfSpec extends WordSpec with ShouldMatchers {
 
   "A Pdf" should {
 
-    "require the executionPath config" in {
-      val file = new File("notexecutable")
-      val filePath = file.getAbsolutePath
+    // "require the executionPath config" in {
+    //   val no_exe = Executable.validate("notexecutable")
+    //   // val file = new File("notexecutable")
+    //   // val filePath = file.getAbsolutePath
 
-      evaluating {
-        new Pdf(filePath, PdfConfig.default)
-      } should produce[NoExecutableException]
+    //   // evaluating {
+    //   //   no_exe map { (ne) => new Pdf(ne, PdfConfig.default) }
+    //   // } should be None
+    //   todo
+    //   // evaluating {
+    //   //   Pdf(no_exe, PdfConfig.default)
+    //   // } should produce[NoExecutableException]
 
-      evaluating {
-        Pdf(filePath, PdfConfig.default)
-      } should produce[NoExecutableException]
+    // }
 
-    }
-
-    CliConfig.findExecutable("wkhtmltopdf") match {
-      case Some(_) =>
+    Executable.validate("wkhtmltopdf") match {
+      case Some(exe) =>
         "generate a PDF file from an HTML string" in {
 
           val page =
@@ -35,7 +36,7 @@ class PdfSpec extends WordSpec with ShouldMatchers {
 
           val file = File.createTempFile("scala.spdf", "pdf")
 
-          val pdf = Pdf(PdfConfig.default)
+          val pdf = Pdf(PdfConfig.default).getOrElse(sys.error("no Executable available"))
 
           pdf.run(page, file)
 

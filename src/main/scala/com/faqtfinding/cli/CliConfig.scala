@@ -26,14 +26,24 @@ object CliConfig {
     ).flatten
   }
 
-  /**
-   * Attempts to find the executable in the system path.
-   * @return
-   */
-  def findExecutable(executableName:String): Option[String] = try {
-    Option(s"which $executableName".!!.trim).filter(_.nonEmpty)
-  } catch {
-    case _: RuntimeException => None
-  }
+  // /**
+  //  * Attempts to find the executable in the system path.
+  //  * @return
+  //  */
+  // def findExecutable(executableName:String): Option[String] = try {
+  //   Option(s"which $executableName".!!.trim).filter(_.nonEmpty)
+  // } catch {
+  //   case _: RuntimeException => None
+  // }
+
+  // /**
+  //  * Check whether the executable is actually executable, if it isn't
+  //  * a NoExecutableException is thrown.
+  //  */
+  // private def validateExecutable_!(executablePath: String): Unit = {
+  //   val executableFile = new File(executablePath)
+  //   if(!executableFile.canExecute) throw new NoExecutableException(executable,executableFile.getAbsolutePath)
+  // }
+
 
 }

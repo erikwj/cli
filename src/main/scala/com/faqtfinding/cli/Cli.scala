@@ -1,27 +1,49 @@
-package com.faqtfinding.spdf
+package com.faqtfinding.cli
 
-import com.faqtfinding.cli._
 import scala.sys.process._
 import java.io.File
 
-trait Executable {
-  def executablePath: Option[String]
-  def executableName: Option[String]
-}
+case class Executable(name: String, path: String) //Why does class not give access to executable.path in abstract class????
 
-abstract class CLI(executablePath: String, config: CliConfig) {
-
-  val executable:String
-
-  validateExecutable_!(executablePath)
+object Executable {
 
   /**
-   * Runs the conversion tool to convert sourceDocument HTML into
-   * destinationDocument PDF.
+   * Check whether the executable is actually executable, if it isn't
+   * a NoExecutableException is thrown.
+   */
+  def checkExecutability(path: String): Option[String] = {
+    val executableFile = new File(path)
+    if(executableFile.canExecute) Some(path) else None 
+  }
+
+  def validate(name: String): Option[Executable] = 
+    for {
+      path <- findExecutable(name)
+      executablepath <- checkExecutability(path)
+    } yield new Executable(name, executablepath) 
+
+  /**
+   * Attempts to find the executable in the system path.
+   * @return
+   */
+  private def findExecutable(executableName:String): Option[String] = try {
+    Option(s"which $executableName".!!.trim).filter(_.nonEmpty)
+  } catch {
+    case _: RuntimeException => None
+  }
+
+}
+
+
+
+
+abstract class CLI(executable: Executable, config: CliConfig) {
+
+  /**
+   * Runs the commandline tool 
    */
   def run[A, B](sourceDocument: A, destinationDocument: B)(implicit sourceDocumentLike: InputSourceFormat[A], destinationDocumentLike: OutputSourceFormat[B]): Int = {
     val commandLine = toCommandLine(sourceDocument, destinationDocument)
-    println(commandLine.mkString(" "))
     val process = Process(commandLine)
     def source = sourceDocumentLike.sourceFrom(sourceDocument) _
     def sink = destinationDocumentLike.sinkTo(destinationDocument) _
@@ -30,24 +52,15 @@ abstract class CLI(executablePath: String, config: CliConfig) {
   }
 
   /**
-   * Generates the command line needed to execute `wkhtmltopdf`
+   * Generates the command line needed to execute the Executable
    */
-  private def toCommandLine[A: InputSourceFormat, B: OutputSourceFormat](source: A, destination: B): Seq[String] =
-    Seq(executablePath) ++
-      PdfConfig.toParameters(config) ++
+  def toCommandLine[A: InputSourceFormat, B: OutputSourceFormat](source: A, destination: B): Seq[String] =
+    Seq(executable.path) ++
+      CliConfig.toParameters(config) ++
       Seq(
         "--quiet",
         implicitly[InputSourceFormat[A]].commandParameter(source),
         implicitly[OutputSourceFormat[B]].commandParameter(destination)
       )
-
-  // /**
-  //  * Check whether the executable is actually executable, if it isn't
-  //  * a NoExecutableException is thrown.
-  //  */
-  // private def validateExecutable_!(executablePath: String): Unit = {
-  //   val executableFile = new File(executablePath)
-  //   if(!executableFile.canExecute) throw new NoExecutableException(executable,executableFile.getAbsolutePath)
-  // }
 
 }

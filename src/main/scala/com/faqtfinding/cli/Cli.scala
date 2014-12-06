@@ -56,7 +56,7 @@ abstract class CLI(executable: Executable, config: CliConfig) {
     Seq(executable.path) ++
       CliConfig.toParameters(config) ++
       Seq(
-        "--quiet",
+        //"--quiet",
         implicitly[InputSourceFormat[A]].commandParameter(input),
         implicitly[OutputSourceFormat[B]].commandParameter(output)
       )

@@ -12,7 +12,7 @@ class Pdf(executable: Executable, config: PdfConfig) extends CLI(executable,conf
     Seq(executable.path) ++
       PdfConfig.toParameters(config) ++
       Seq(
-        //"--quiet",
+        "--quiet",
         implicitly[InputSourceFormat[A]].commandParameter(input),
         implicitly[OutputSourceFormat[B]].commandParameter(output)
       )

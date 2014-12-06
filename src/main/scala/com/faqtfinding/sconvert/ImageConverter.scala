@@ -5,21 +5,17 @@ import scala.sys.process._
 import java.io.File
 
 class ImageConverter(executable: Executable, config: ImageConverterConfig) extends CLI(executable,config) {
-		  /**
+  
+  /**
    * Generates the command line needed to execute the Executable
    */
-
-   // println("Config >> " + ImageConverterConfig.toParameters(config))
-
   def toCommandLine[A: InputSourceFormat, B: OutputSourceFormat](input: A, output: B): Seq[String] = 
     Seq(executable.path) ++
       ImageConverterConfig.toParameters(config) ++
       Seq(
-        //"--quiet",
         implicitly[InputSourceFormat[A]].commandParameter(input),
         implicitly[OutputSourceFormat[B]].commandParameter(output)
       )
-
 }
 
 object ImageConverter {
@@ -31,6 +27,6 @@ object ImageConverter {
   def apply(config: ImageConverterConfig): Option[ImageConverter] = {
     val executable = "convert"
     Executable.validate(executable) map {(exe) => new ImageConverter(exe, config)}
-   
   }
+
 }

@@ -25,12 +25,13 @@ class ImageConverterSpec extends WordSpec with ShouldMatchers {
 
     // }
 
+
     Executable.validate("convert") match {
       case Some(exe) => {
         "generate images from a PDF file" in {
 
-          val sourceFile = new File("/Users/erikjanssen/Copy/KvK/form.pdf")
-          val outFile = new File("/Users/erikjanssen/Copy/KvK/formulier.jpg")
+          val sourceFile = new File("./resources/Notes.pdf")
+          val outFile = new File("./resources/Notes.jpg")
           
           val config = new ImageConverterConfig {
             density := 200
@@ -41,9 +42,10 @@ class ImageConverterSpec extends WordSpec with ShouldMatchers {
 
           returnc should equal (0)
         }
+
         "generate images from a PDF file a second time with outputStream" in {
 
-          val sourceFile = new File("/Users/erikjanssen/Copy/KvK/Aantekeningen.pdf")
+          val sourceFile = new File("./resources/Notes.pdf")
           val outputStream = new ByteArrayOutputStream
     
           val ic = ImageConverter(exe,ImageConverterConfig.default).getOrElse(sys.error("no Executable available"))

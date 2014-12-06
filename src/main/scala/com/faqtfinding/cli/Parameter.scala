@@ -28,8 +28,8 @@ trait Parameter[T] {
    * Converts this option to a sequence of strings to be appended to the
    * command line
    */
-  def toParameter(implicit shower: ParamShow[T]): Iterable[String] = value match {
-    case Some(v) => shower.show(name, v)
+  def toParameter(prefix: String)(implicit shower: ParamShow[T]): Iterable[String] = value match {
+    case Some(v) => shower.show(prefix, name, v)
     case _ => Iterable.empty
   }
 
@@ -67,45 +67,45 @@ object Parameter {
  * appended to the command line.
  */
 trait ParamShow[T] {
-  def show(name: String, value: T): Iterable[String]
+  def show(prefix: String, name: String, value: T): Iterable[String]
 }
 
 object ParamShow {
 
   implicit object StringParamShow extends ParamShow[String] {
-    override def show(name: String, value: String): Iterable[String] =
-      formatParam(name, Some(value))
+    override def show(prefix: String, name: String, value: String): Iterable[String] =
+      formatParam(prefix, name, Some(value))
   }
 
   implicit object BooleanParamShow extends ParamShow[Boolean] {
-    override def show(name: String, value: Boolean): Iterable[String] = value match {
-      case true => formatParam(name, None)
+    override def show(prefix: String, name: String, value: Boolean): Iterable[String] = value match {
+      case true => formatParam(prefix, name, None)
       case _ => Iterable.empty
     }
   }
 
   implicit object OptionBooleanParamShow extends ParamShow[Option[Boolean]] {
-    override def show(name: String, valueOpt: Option[Boolean]): Iterable[String] =
-      valueOpt.toIterable.flatMap { formatParam(name, _) }
+    override def show(prefix: String, name: String, valueOpt: Option[Boolean]): Iterable[String] =
+      valueOpt.toIterable.flatMap { formatParam(prefix, name, _) }
   }
 
   implicit object IntParamShow extends ParamShow[Int] {
-    override def show(name: String, value: Int): Iterable[String] =
-      formatParam(name, Some(value.toString))
+    override def show(prefix: String, name: String, value: Int): Iterable[String] =
+      formatParam(prefix, name, Some(value.toString))
   }
 
   implicit object FloatParamShow extends ParamShow[Float] {
-    override def show(name: String, value: Float): Iterable[String] =
-      formatParam(name, Some("%.2f".format(value)))
+    override def show(prefix: String, name: String, value: Float): Iterable[String] =
+      formatParam(prefix, name, Some("%.2f".format(value)))
   }
 
-  def formatParam(name: String, value: Option[String]): Iterable[String] =
-    Seq(Some("--" + name), value).flatten
+  def formatParam(prefix: String, name: String, value: Option[String]): Iterable[String] =
+    Seq(Some(prefix + name), value).flatten
 
-  def formatParam(name: String, value: Boolean): Iterable[String] = if(value) {
-    Some("--" + name)
+  def formatParam(prefix: String, name: String, value: Boolean): Iterable[String] = if(value) {
+    Some(prefix + name)
   } else {
-    Some("--no-" + name)
+    Some(prefix + "no-" + name)
   }
 
 }

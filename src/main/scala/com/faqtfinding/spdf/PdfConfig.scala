@@ -9,8 +9,8 @@ import ParamShowPdf._
 object ParamShowPdf {
   
   implicit object PageOrientationParamShow extends ParamShow[PageOrientation] {
-    override def show(name: String, value: PageOrientation): Iterable[String] =
-      formatParam(name, Some(value.value))
+    override def show(prefix:String, name: String, value: PageOrientation): Iterable[String] =
+      formatParam(prefix,name, Some(value.value))
   }
 
 }
@@ -152,6 +152,10 @@ trait PdfConfig extends CliConfig {
   val outline = Parameter[Option[Boolean]]("outline")
 
   val outlineDepth = Parameter[Int]("outline-depth")
+  
+  val username = Parameter[String]("username")
+  
+  val password = Parameter[String]("password")
 
   val printMediaType = Parameter[Option[Boolean]]("print-media-type")
   
@@ -168,73 +172,76 @@ object PdfConfig {
    * Generates a sequence of command line parameters from a `PdfKitConfig`
    */
   def toParameters(config: PdfConfig): Seq[String] = {
+    val prefix = "--"
     import config._
     Seq(
-      convertForms.toParameter,
-      defaultHeader.toParameter,
-      disableExternalLinks.toParameter,
-      disableInternalLinks.toParameter,
-      disableJavascript.toParameter,
-      disablePdfCompression.toParameter,
-      disableSmartShrinking.toParameter,
-      encoding.toParameter,
-      footerCenter.toParameter,
-      footerFontName.toParameter,
-      footerFontSize.toParameter,
-      footerHtml.toParameter,
-      footerLeft.toParameter,
-      footerLine.toParameter,
-      footerRight.toParameter,
-      footerSpacing.toParameter,
-      grayScale.toParameter,
-      headerCenter.toParameter,
-      headerFontName.toParameter,
-      headerFontSize.toParameter,
-      headerHtml.toParameter,
-      headerLeft.toParameter,
-      headerLine.toParameter,
-      headerRight.toParameter,
-      headerSpacing.toParameter,
-      lowQuality.toParameter,
-      marginBottom.toParameter,
-      marginLeft.toParameter,
-      marginRight.toParameter,
-      marginTop.toParameter,
-      minimumFontSize.toParameter,
-      background.toParameter,
-      orientation.toParameter,
-      outline.toParameter,
-      outlineDepth.toParameter,
-      pageHeight.toParameter,
-      pageOffset.toParameter,
-      pageSize.toParameter,
-      pageWidth.toParameter,
-      tableOfContent.toParameter,
-      tableOfContentDepth.toParameter,
-      tableOfContentDisableBackLinks.toParameter,
-      tableOfContentDisableLinks.toParameter,
-      tableOfContentFontName.toParameter,
-      tableOfContentHeaderFontName.toParameter,
-      tableOfContentHeaderFontSize.toParameter,
-      tableOfContentHeaderText.toParameter,
-      tableOfContentLevel1FontSize.toParameter,
-      tableOfContentLevel1Indentation.toParameter,
-      tableOfContentLevel2FontSize.toParameter,
-      tableOfContentLevel2Indentation.toParameter,
-      tableOfContentLevel3FontSize.toParameter,
-      tableOfContentLevel3Indentation.toParameter,
-      tableOfContentLevel4FontSize.toParameter,
-      tableOfContentLevel4Indentation.toParameter,
-      tableOfContentLevel5FontSize.toParameter,
-      tableOfContentLevel5Indentation.toParameter,
-      tableOfContentLevel6FontSize.toParameter,
-      tableOfContentLevel6Indentation.toParameter,
-      tableOfContentLevel7FontSize.toParameter,
-      tableOfContentLevel7Indentation.toParameter,
-      tableOfContentNoDots.toParameter,
-      title.toParameter,
-      zoom.toParameter,
-      printMediaType.toParameter
+      convertForms.toParameter(prefix),
+      defaultHeader.toParameter(prefix),
+      disableExternalLinks.toParameter(prefix),
+      disableInternalLinks.toParameter(prefix),
+      disableJavascript.toParameter(prefix),
+      disablePdfCompression.toParameter(prefix),
+      disableSmartShrinking.toParameter(prefix),
+      encoding.toParameter(prefix),
+      footerCenter.toParameter(prefix),
+      footerFontName.toParameter(prefix),
+      footerFontSize.toParameter(prefix),
+      footerHtml.toParameter(prefix),
+      footerLeft.toParameter(prefix),
+      footerLine.toParameter(prefix),
+      footerRight.toParameter(prefix),
+      footerSpacing.toParameter(prefix),
+      grayScale.toParameter(prefix),
+      headerCenter.toParameter(prefix),
+      headerFontName.toParameter(prefix),
+      headerFontSize.toParameter(prefix),
+      headerHtml.toParameter(prefix),
+      headerLeft.toParameter(prefix),
+      headerLine.toParameter(prefix),
+      headerRight.toParameter(prefix),
+      headerSpacing.toParameter(prefix),
+      lowQuality.toParameter(prefix),
+      marginBottom.toParameter(prefix),
+      marginLeft.toParameter(prefix),
+      marginRight.toParameter(prefix),
+      marginTop.toParameter(prefix),
+      minimumFontSize.toParameter(prefix),
+      background.toParameter(prefix),
+      orientation.toParameter(prefix),
+      outline.toParameter(prefix),
+      outlineDepth.toParameter(prefix),
+      pageHeight.toParameter(prefix),
+      pageOffset.toParameter(prefix),
+      pageSize.toParameter(prefix),
+      pageWidth.toParameter(prefix),
+      tableOfContent.toParameter(prefix),
+      tableOfContentDepth.toParameter(prefix),
+      tableOfContentDisableBackLinks.toParameter(prefix),
+      tableOfContentDisableLinks.toParameter(prefix),
+      tableOfContentFontName.toParameter(prefix),
+      tableOfContentHeaderFontName.toParameter(prefix),
+      tableOfContentHeaderFontSize.toParameter(prefix),
+      tableOfContentHeaderText.toParameter(prefix),
+      tableOfContentLevel1FontSize.toParameter(prefix),
+      tableOfContentLevel1Indentation.toParameter(prefix),
+      tableOfContentLevel2FontSize.toParameter(prefix),
+      tableOfContentLevel2Indentation.toParameter(prefix),
+      tableOfContentLevel3FontSize.toParameter(prefix),
+      tableOfContentLevel3Indentation.toParameter(prefix),
+      tableOfContentLevel4FontSize.toParameter(prefix),
+      tableOfContentLevel4Indentation.toParameter(prefix),
+      tableOfContentLevel5FontSize.toParameter(prefix),
+      tableOfContentLevel5Indentation.toParameter(prefix),
+      tableOfContentLevel6FontSize.toParameter(prefix),
+      tableOfContentLevel6Indentation.toParameter(prefix),
+      tableOfContentLevel7FontSize.toParameter(prefix),
+      tableOfContentLevel7Indentation.toParameter(prefix),
+      tableOfContentNoDots.toParameter(prefix),
+      title.toParameter(prefix),
+      zoom.toParameter(prefix),
+      username.toParameter(prefix),
+      password.toParameter(prefix),
+      printMediaType.toParameter(prefix)
     ).flatten
   }
 

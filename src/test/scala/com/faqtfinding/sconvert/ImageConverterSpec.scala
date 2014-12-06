@@ -33,7 +33,7 @@ class ImageConverterSpec extends WordSpec with ShouldMatchers {
           val outFile = new File("/Users/erikjanssen/Copy/KvK/formulier.jpg")
           
           val config = new ImageConverterConfig {
-            density := 100
+            density := 200
           }
           val ic = ImageConverter(exe,config).getOrElse(sys.error("no Executable available"))
 

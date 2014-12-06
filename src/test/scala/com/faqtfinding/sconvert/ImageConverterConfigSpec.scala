@@ -15,7 +15,7 @@ class ImageConverterConfigSpec extends WordSpec with ShouldMatchers {
       val config = new ImageConverterConfig {
         density := 100
       }
-      ImageConverterConfig.toParameters(config) should equal(Seq("--density", "100"))
+      ImageConverterConfig.toParameters(config) should equal(Seq("-density", "100"))
     }
 
   }

@@ -31,7 +31,7 @@ object ImageConverterConfig {
   def toParameters(config: ImageConverterConfig): Seq[String] = {
     import config._
     Seq(
-      density.toParameter
+      density.toParameter("-")
    
     ).flatten
   }

@@ -52,13 +52,13 @@ abstract class CLI(executable: Executable, config: CliConfig) {
   /**
    * Generates the command line needed to execute the Executable
    */
-  def toCommandLine[A: InputSourceFormat, B: OutputSourceFormat](input: A, output: B): Seq[String] =
-    Seq(executable.path) ++
-      CliConfig.toParameters(config) ++
-      Seq(
-        //"--quiet",
-        implicitly[InputSourceFormat[A]].commandParameter(input),
-        implicitly[OutputSourceFormat[B]].commandParameter(output)
-      )
+  def toCommandLine[A: InputSourceFormat, B: OutputSourceFormat](input: A, output: B): Seq[String]
+   // = Seq(executable.path) ++
+   //    CliConfig.toParameters(config) ++
+   //    Seq(
+   //      //"--quiet",
+   //      implicitly[InputSourceFormat[A]].commandParameter(input),
+   //      implicitly[OutputSourceFormat[B]].commandParameter(output)
+   //    )
 
 }

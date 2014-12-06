@@ -10,21 +10,6 @@ class PdfSpec extends WordSpec with ShouldMatchers {
 
   "A Pdf" should {
 
-    // "require the executionPath config" in {
-    //   val no_exe = Executable.validate("notexecutable")
-    //   // val file = new File("notexecutable")
-    //   // val filePath = file.getAbsolutePath
-
-    //   // evaluating {
-    //   //   no_exe map { (ne) => new Pdf(ne, PdfConfig.default) }
-    //   // } should be None
-    //   todo
-    //   // evaluating {
-    //   //   Pdf(no_exe, PdfConfig.default)
-    //   // } should produce[NoExecutableException]
-
-    // }
-
     Executable.validate("wkhtmltopdf") match {
       case Some(exe) =>
         "generate a PDF file from an HTML string" in {

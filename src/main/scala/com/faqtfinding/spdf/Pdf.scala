@@ -5,7 +5,7 @@ import scala.sys.process._
 import java.io.File
 
 class Pdf(executable: Executable, config: PdfConfig) extends CLI(executable,config) {
-	  /**
+  /**
    * Generates the command line needed to execute the Executable
    */
   def toCommandLine[A: InputSourceFormat, B: OutputSourceFormat](input: A, output: B): Seq[String] = 

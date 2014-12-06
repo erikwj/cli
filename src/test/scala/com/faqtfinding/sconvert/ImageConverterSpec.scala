@@ -10,22 +10,6 @@ class ImageConverterSpec extends WordSpec with ShouldMatchers {
 
   "A ImageConverter" should {
 
-    // "require the executionPath config" in {
-    //   val no_exe = Executable.validate("notexecutable")
-    //   // val file = new File("notexecutable")
-    //   // val filePath = file.getAbsolutePath
-
-    //   // evaluating {
-    //   //   no_exe map { (ne) => new ImageConverter(ne, ImageConverterConfig.default) }
-    //   // } should be None
-    //   todo
-    //   // evaluating {
-    //   //   ImageConverter(no_exe, ImageConverterConfig.default)
-    //   // } should produce[NoExecutableException]
-
-    // }
-
-
     Executable.validate("convert") match {
       case Some(exe) => {
         "generate images from a PDF file" in {
@@ -57,6 +41,14 @@ class ImageConverterSpec extends WordSpec with ShouldMatchers {
           returnc should equal (0)
         }
 
+      }
+      case None =>
+        "Skipping test, missing convert binary" in { true should equal(true) }
+    }
+
+    Executable.validate("no-convert") match {
+      case Some(exe) => { //shouldn't be here
+        
       }
       case None =>
         "Skipping test, missing convert binary" in { true should equal(true) }

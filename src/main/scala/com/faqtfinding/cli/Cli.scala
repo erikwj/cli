@@ -4,35 +4,27 @@ import scala.sys.process._
 import java.io.File
 import scalaz._
 import Scalaz._
+import scalaz.Validation.FlatMap._
 
-case class Executable(name: String, path: String) //Why does class not give access to executable.path in abstract class????
+case class Executable(name: String, path: String) 
 
 object Executable {
 
-  /**
-   * Check whether the executable is actually executable, if it isn't
-   * a NoExecutableException is thrown.
-   * Use scalaz Validation / \/ 
-   */
-  def checkExecutability(path: String): Option[String] = {
+  private def checkExecutability(path: String): ValidationNel[String,String] = {
     val executableFile = new File(path)
-    if(executableFile.canExecute) Some(path) else None 
+    if(executableFile.canExecute) path.success else "$path is not executable".failureNel[String] 
   }
   
-  /**
-   * Attempts to find the executable in the system path.
-   * @return
-   */
-  private def findExecutable(executableName:String): Option[String] = try {
-    Option(s"which $executableName".!!.trim).filter(_.nonEmpty)
+  private def findExecutable(executable:String): ValidationNel[String,String] = try {
+    Success(s"which $executable".!!.trim)
   } catch {
-    case _: RuntimeException => None
+    case _: RuntimeException => s"no executable found for $executable".failureNel[String]
   }
 
-  def validate(name: String): \/[String,Executable] = 
+  def validate(name: String): ValidationNel[String,Executable] = 
     for {
-      path <- findExecutable(name) \/> "no executable found"
-      executablepath <- checkExecutability(path) \/> "path is not executable"
+      path <- findExecutable(name) 
+      executablepath <- checkExecutability(path) 
     } yield Executable(name, executablepath) 
 
 }

@@ -2,18 +2,18 @@ package com.faqtfinding.tools
 
 import java.io.{ByteArrayOutputStream, File}
 import scala.sys.process._
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
 import org.scalatest.WordSpec
 import com.faqtfinding.cli._
 import scalaz._
 import Scalaz._
 
-class ImageConverterSpec extends WordSpec with ShouldMatchers {
+class ImageConverterSpec extends WordSpec with Matchers {
 
   "A ImageConverter" should {
 
     Executable.validate("convert") match {
-      case \/-(exe) => {
+      case Success(exe) => {
         "generate images from a PDF file" in {
 
           val sourceFile = new File("./resources/Notes.pdf")
@@ -44,13 +44,13 @@ class ImageConverterSpec extends WordSpec with ShouldMatchers {
         }
 
       }
-      case -\/(failure) =>
+      case Failure(failure) =>
         "Skipping test, missing convert binary" in { true should equal(true) }
     }
 
     Executable.validate("no-convert") match {
-      case -\/(fmsg) => fmsg should equal ("no executable found") 
-      case \/-(exe) => fail
+      case Failure(fmsg) => fmsg should equal (NonEmptyList("no executable found for no-convert") )
+      case Success(exe) => fail
     }
 
 

@@ -2,18 +2,18 @@ package com.faqtfinding.tools
 
 import java.io.File
 import scala.sys.process._
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
 import org.scalatest.WordSpec
 import com.faqtfinding.cli._
 import scalaz._
 import Scalaz._
 
-class PdfSpec extends WordSpec with ShouldMatchers {
+class PdfSpec extends WordSpec with Matchers {
 
   "A Pdf" should {
 
     Executable.validate("wkhtmltopdf") match {
-      case \/-(exe) =>
+      case Success(exe) =>
         "generate a PDF file from an HTML string" in {
 
           val page =
@@ -30,7 +30,7 @@ class PdfSpec extends WordSpec with ShouldMatchers {
           Seq("file", file.getAbsolutePath).!! should include("PDF document")
         }
 
-      case -\/(fmsg) => fail(fmgs) 
+      case Failure(fmsg) => fail
     }
 
 

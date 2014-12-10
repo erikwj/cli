@@ -2,6 +2,8 @@ package com.faqtfinding.cli
 
 import scala.sys.process._
 import java.io.File
+import scalaz._
+import Scalaz._
 
 case class Executable(name: String, path: String) //Why does class not give access to executable.path in abstract class????
 
@@ -10,6 +12,7 @@ object Executable {
   /**
    * Check whether the executable is actually executable, if it isn't
    * a NoExecutableException is thrown.
+   * Use scalaz Validation / \/ 
    */
   def checkExecutability(path: String): Option[String] = {
     val executableFile = new File(path)
@@ -26,10 +29,10 @@ object Executable {
     case _: RuntimeException => None
   }
 
-  def validate(name: String): Option[Executable] = 
+  def validate(name: String): \/[String,Executable] = 
     for {
-      path <- findExecutable(name)
-      executablepath <- checkExecutability(path)
+      path <- findExecutable(name) \/> "no executable found"
+      executablepath <- checkExecutability(path) \/> "path is not executable"
     } yield Executable(name, executablepath) 
 
 }
@@ -53,12 +56,6 @@ abstract class CLI(executable: Executable, config: CliConfig) {
    * Generates the command line needed to execute the Executable
    */
   def toCommandLine[A: InputSourceFormat, B: OutputSourceFormat](input: A, output: B): Seq[String]
-   // = Seq(executable.path) ++
-   //    CliConfig.toParameters(config) ++
-   //    Seq(
-   //      //"--quiet",
-   //      implicitly[InputSourceFormat[A]].commandParameter(input),
-   //      implicitly[OutputSourceFormat[B]].commandParameter(output)
-   //    )
+
 
 }

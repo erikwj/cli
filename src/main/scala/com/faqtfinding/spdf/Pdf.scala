@@ -25,9 +25,12 @@ object Pdf {
    * Creates a new instance of Pdf with the passed configuration
    */
   // def apply(executable: Executable, config: PdfConfig): Pdf = new Pdf(executable, config)
-  def apply(config: PdfConfig): Option[Pdf] = {
+  def apply(config: PdfConfig): Pdf = {
     val executable = "wkhtmltopdf"
-    Executable.validate(executable) map {(exe) => new Pdf(exe, config)}
+    val exe = Executable.validate(executable).getOrElse(sys.error("no executable"))
+    
+    // Executable.validate(executable) map {(exe) => 
+    new Pdf(exe, config)
    
   }
 }

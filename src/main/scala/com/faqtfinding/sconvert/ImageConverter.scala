@@ -23,10 +23,11 @@ object ImageConverter {
   /**
    * Creates a new instance of ImageConverter with the passed configuration
    */
-  def apply(executable: Executable, config: ImageConverterConfig): Option[ImageConverter] = Some(new ImageConverter(executable, config))
-  def apply(config: ImageConverterConfig): Option[ImageConverter] = {
+  def apply(executable: Executable, config: ImageConverterConfig): ImageConverter = new ImageConverter(executable, config)
+  def apply(config: ImageConverterConfig): ImageConverter = {
     val executable = "convert"
-    Executable.validate(executable) map {(exe) => new ImageConverter(exe, config)}
+    val exe = Executable.validate(executable).getOrElse(sys.error("no executable"))
+    new ImageConverter(exe, config)
   }
 
 }

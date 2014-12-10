@@ -5,13 +5,15 @@ import scala.sys.process._
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.WordSpec
 import com.faqtfinding.cli._
+import scalaz._
+import Scalaz._
 
 class ImageConverterSpec extends WordSpec with ShouldMatchers {
 
   "A ImageConverter" should {
 
     Executable.validate("convert") match {
-      case Some(exe) => {
+      case \/-(exe) => {
         "generate images from a PDF file" in {
 
           val sourceFile = new File("./resources/Notes.pdf")
@@ -20,7 +22,7 @@ class ImageConverterSpec extends WordSpec with ShouldMatchers {
           val config = new ImageConverterConfig {
             density := 200
           }
-          val ic = ImageConverter(exe,config).getOrElse(sys.error("no Executable available"))
+          val ic = ImageConverter(exe,config)
 
           val returnc = ic.run(sourceFile, outFile)
 
@@ -32,7 +34,7 @@ class ImageConverterSpec extends WordSpec with ShouldMatchers {
           val sourceFile = new File("./resources/Notes.pdf")
           val outputStream = new ByteArrayOutputStream
     
-          val ic = ImageConverter(exe,ImageConverterConfig.default).getOrElse(sys.error("no Executable available"))
+          val ic = ImageConverter(exe,ImageConverterConfig.default)
 
           val returnc = ic.run(sourceFile, outputStream)
  
@@ -42,16 +44,13 @@ class ImageConverterSpec extends WordSpec with ShouldMatchers {
         }
 
       }
-      case None =>
+      case -\/(failure) =>
         "Skipping test, missing convert binary" in { true should equal(true) }
     }
 
     Executable.validate("no-convert") match {
-      case Some(exe) => { //shouldn't be here
-        
-      }
-      case None =>
-        "Skipping test, missing convert binary" in { true should equal(true) }
+      case -\/(fmsg) => fmsg should equal ("no executable found") 
+      case \/-(exe) => fail
     }
 
 

@@ -1,4 +1,4 @@
-package com.faqtfinding.cli
+package io.summarized.cli
 
 import java.io.{ByteArrayInputStream, InputStream, File}
 import scala.sys.process._

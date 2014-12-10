@@ -1,7 +1,7 @@
 
 name := "commandlinetools"
 
-organization := "com.faqtfinding"
+organization := "io.summarized"
 
 version := "0.1-SNAPSHOT"
 

@@ -1,10 +1,10 @@
-package com.faqtfinding.tools
+package io.summarized.tools
 
 import java.io.File
 import scala.sys.process._
 import org.scalatest.Matchers
 import org.scalatest.WordSpec
-import com.faqtfinding.cli._
+import io.summarized.cli._
 import scalaz._
 import Scalaz._
 

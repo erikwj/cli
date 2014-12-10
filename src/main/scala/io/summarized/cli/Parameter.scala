@@ -1,4 +1,4 @@
-package com.faqtfinding.cli
+package io.summarized.cli
 
 /**
  * Describes a command line option

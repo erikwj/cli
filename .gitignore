@@ -6,6 +6,8 @@
 *.sublime-project
 *.sublime-workspace
 *.settings
+resources/*.jpg
+resources/*.png
 
 # sbt specific
 .cache/

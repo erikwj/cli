@@ -1,9 +1,9 @@
-package com.faqtfinding.tools
+package io.summarized.tools
 
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
 import org.scalatest.WordSpec
 
-class ImageConverterConfigSpec extends WordSpec with ShouldMatchers {
+class ImageConverterConfigSpec extends WordSpec with Matchers {
 
   "ImageConverterConfig" should {
 

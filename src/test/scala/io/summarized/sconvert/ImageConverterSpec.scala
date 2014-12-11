@@ -22,6 +22,7 @@ class ImageConverterSpec extends WordSpec with Matchers {
           val config = new ImageConverterConfig {
             density := 200
           }
+
           val ic = ImageConverter(exe,config)
 
           val returnc = ic.run(sourceFile, outFile)
@@ -38,7 +39,7 @@ class ImageConverterSpec extends WordSpec with Matchers {
 
           val returnc = ic.run(sourceFile, outputStream)
  
-          outputStream.close()
+          outputStream.close() //TODO how to read outputstream
 
           returnc should equal (0)
         }
@@ -47,12 +48,6 @@ class ImageConverterSpec extends WordSpec with Matchers {
       case Failure(failure) =>
         "Skipping test, missing convert binary" in { true should equal(true) }
     }
-
-    Executable.validate("no-convert") match {
-      case Failure(fmsg) => fmsg should equal (NonEmptyList("no executable found for no-convert") )
-      case Success(exe) => fail
-    }
-
 
   }
 

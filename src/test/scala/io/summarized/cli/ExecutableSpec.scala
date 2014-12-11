@@ -12,13 +12,24 @@ class ExecutableSpec extends WordSpec with Matchers {
 
   "An Executable" should {
     
-    "return an instance a default config" in {
+    // "should  " {
     
       Executable.validate("cat") match {
-        case Success(exe) => true should equal(true) // exe should be instance of Executable
+        case Success(exe) => {
+          "be created and be an Executable" in {
+            exe shouldBe a [Executable]
+          }
+
+          "have a name field" in {
+            exe.name should equal ("cat")
+          }
+          "have a path field" in {
+            exe.path should equal ("/bin/cat")
+          }
+        }
         case Failure(failure) => fail
       }
-    }
+    // }
 
     "return an error message otherwise" in {
       Executable.validate("dog") match {
